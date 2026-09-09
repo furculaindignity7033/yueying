@@ -48,7 +48,11 @@ yueying --install-skill             # 把 Claude Code 技能装到 ~/.claude/ski
 yueying 视频.mp4
 yueying "https://www.bilibili.com/video/BVxxxx"
 yueying "https://www.youtube.com/watch?v=xxxx" --out ./notes/xxx
+yueying 第1课.mp4 第2课.mp4 "https://www.bilibili.com/video/BVyyyy"   # 多个一起，各出各的文件夹
+yueying "https://www.bilibili.com/video/BVxxxx" --all                      # B站 分 P / 合集 全部处理
 ```
+
+多个视频时，输出目录下每个视频一个文件夹，外加一份 `index.md` 总目录。
 
 输出目录默认是 `./yueying_out/<视频名>/`：
 
@@ -65,6 +69,7 @@ manifest.json      给程序读的结构化结果
 
 | 参数 | 作用 |
 |---|---|
+| `--all` | 链接是 B站 分 P / 合集 / 播放列表时全部处理（默认只取第一个） |
 | `--lang zh` | 指定语言（默认自动检测） |
 | `--model small` | 换小模型，没显卡的机器快很多；可选 tiny / base / small / medium / large-v3 / large-v3-turbo |
 | `--device cpu` | 强制用 CPU |

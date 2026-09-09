@@ -32,6 +32,25 @@ def _pick_sub_langs(info: dict) -> tuple:
     return [next(iter(auto))], True
 
 
+def list_entries(url: str, cookies_from_browser=None, log=print) -> list:
+    """链接是分 P / 合集 / 播放列表时，列出里面每个视频的链接和标题；普通链接就返回它自己。"""
+    import yt_dlp
+
+    opts = {"quiet": True, "no_warnings": True, "noplaylist": False, "extract_flat": "in_playlist"}
+    if cookies_from_browser:
+        opts["cookiesfrombrowser"] = (cookies_from_browser,)
+    with yt_dlp.YoutubeDL(opts) as y:
+        info = y.extract_info(url, download=False)
+    if info.get("_type") != "playlist" or not info.get("entries"):
+        return [{"url": url, "title": info.get("title") or ""}]
+    out = []
+    for e in info["entries"]:
+        u = e.get("webpage_url") or e.get("url")
+        if u:
+            out.append({"url": u, "title": e.get("title") or ""})
+    return out or [{"url": url, "title": info.get("title") or ""}]
+
+
 def download(url: str, out_dir: str, cookies_from_browser=None, log=print) -> dict:
     import yt_dlp
 
