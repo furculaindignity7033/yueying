@@ -73,6 +73,7 @@ def main(argv=None) -> int:
     ap.add_argument("--interval", type=float, metavar="秒", help="大约每隔几秒抽一帧（默认按时长自动：1 分钟内 2 秒，3 分钟内 3 秒，10 分钟内 6 秒，30 分钟内 12 秒，更长 20 秒）")
     ap.add_argument("--frames", type=int, help="最多抽多少关键帧（默认按时长自动，上限 150）")
     ap.add_argument("--scene", type=float, default=0.3, help="场景切换灵敏度 0~1，越小越敏感（默认 0.3）")
+    ap.add_argument("--no-dedupe", action="store_true", help="不去掉和前一帧几乎相同的画面（默认去掉，只留变化的）")
     ap.add_argument("--no-frames", action="store_true", help="不抽画面")
     ap.add_argument("--no-asr", action="store_true", help="没有字幕也不做语音识别")
     ap.add_argument("--force-asr", action="store_true", help="即使有字幕也重新做语音识别")
@@ -164,7 +165,7 @@ def main(argv=None) -> int:
         scenes = fr.scene_times(video, a.scene)
         times = fr.plan_times(meta["duration"], scenes, target)
         log(f"      场景切换 {len(scenes)} 处，抽 {len(times)} 帧")
-        frame_list = fr.extract(video, times, os.path.join(out_dir, "frames"), log=log)
+        frame_list = fr.extract(video, times, os.path.join(out_dir, "frames"), dedupe=not a.no_dedupe, log=log)
         grids = fr.make_grids(frame_list, out_dir)
 
     # ---- 报告 ----

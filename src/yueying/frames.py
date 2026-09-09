@@ -1,7 +1,7 @@
 """关键帧：场景切换检测 + 等间隔兜底；每张烧时间戳；再拼成九宫格总览图。"""
 import os
 import re
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 from . import ffm
 
@@ -96,21 +96,48 @@ def _burn(img: Image.Image, label: str) -> Image.Image:
     return img
 
 
-def extract(video: str, times: list, out_dir: str, width: int = 1280, log=print) -> list:
-    """逐个时间点抽一帧存 jpg，返回 [{index, time, file}]。"""
+DUP_RATIO = 0.02   # 缩略图上变化的像素不到 2% 就当作和前一帧相同
+
+
+def _thumb(img: Image.Image) -> Image.Image:
+    return img.convert("L").resize((64, 36), Image.BILINEAR)
+
+
+def changed_ratio(a: Image.Image, b: Image.Image, threshold: int = 20) -> float:
+    """两张缩略图里明显变化（灰度差 > threshold）的像素占比。"""
+    d = ImageChops.difference(a, b).tobytes()
+    return sum(1 for v in d if v > threshold) / len(d)
+
+
+def extract(video: str, times: list, out_dir: str, width: int = 1280, dedupe: bool = True, log=print) -> list:
+    """逐个时间点抽一帧存 jpg，返回 [{index, time, file}]。dedupe 时丢掉和前一帧几乎一样的画面。"""
     os.makedirs(out_dir, exist_ok=True)
-    frames = []
-    for i, t in enumerate(times, 1):
-        path = os.path.join(out_dir, f"f{i:03d}_{slug_time(t)}.jpg")
+    frames, dropped, last_thumb = [], 0, None
+    tmp = os.path.join(out_dir, "_tmp.jpg")
+    for n, t in enumerate(times, 1):
         p = ffm.run(["-ss", f"{t:.3f}", "-i", video, "-frames:v", "1",
-                     "-vf", f"scale='min({width},iw)':-2", "-q:v", "3", path], check=False)
-        if p.returncode != 0 or not os.path.exists(path):
+                     "-vf", f"scale='min({width},iw)':-2", "-q:v", "3", tmp], check=False)
+        if p.returncode != 0 or not os.path.exists(tmp):
             continue
-        img = Image.open(path).convert("RGB")
+        with Image.open(tmp) as im:
+            img = im.convert("RGB")
+        th = _thumb(img)
+        if dedupe and last_thumb is not None and changed_ratio(last_thumb, th) < DUP_RATIO:
+            dropped += 1
+            continue
+        last_thumb = th
+        i = len(frames) + 1
+        path = os.path.join(out_dir, f"f{i:03d}_{slug_time(t)}.jpg")
         _burn(img, f"#{i} {fmt_time(t)}").save(path, quality=88)
         frames.append({"index": i, "time": t, "file": path})
-        if i % 10 == 0:
-            log(f"  抽帧 {i}/{len(times)}")
+        if n % 10 == 0:
+            log(f"  抽帧 {n}/{len(times)}")
+    try:
+        os.remove(tmp)
+    except OSError:
+        pass
+    if dropped:
+        log(f"      去掉 {dropped} 张和前一帧几乎相同的画面，保留 {len(frames)} 张")
     return frames
 
 

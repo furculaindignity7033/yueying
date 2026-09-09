@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "yueying"
-version = "0.1.1"
+version = "0.1.2"
 description = "阅影：把视频变成 AI 能读的文字稿和关键帧，让 Claude Code / Cursor 等编程助手看懂视频"
 readme = "README.md"
 requires-python = ">=3.9"
