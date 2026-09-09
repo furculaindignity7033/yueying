@@ -25,19 +25,28 @@ def scene_times(video: str, threshold: float = 0.3) -> list:
     return [float(x) for x in re.findall(r"pts_time:\s*([0-9.]+)", p.stderr)]
 
 
-def default_target(duration: float) -> int:
-    """按时长定抽多少帧：短视频密一点，长视频稀一点，上限 60。"""
+MAX_FRAMES = 150
+
+
+def default_interval(duration: float) -> float:
+    """按时长定默认间隔（秒）：短视频密一点，长视频稀一点。"""
     if duration <= 60:
-        n = duration / 3
-    elif duration <= 180:
-        n = duration / 6
-    elif duration <= 600:
-        n = duration / 12
-    elif duration <= 1800:
-        n = duration / 25
-    else:
-        n = duration / 45
-    return max(4, min(60, int(n)))
+        return 2
+    if duration <= 180:
+        return 3
+    if duration <= 600:
+        return 6
+    if duration <= 1800:
+        return 12
+    return 20
+
+
+def default_target(duration: float, interval: float = None) -> int:
+    """按时长（或用户给的间隔）定抽多少帧，上限 MAX_FRAMES；用户明确给了间隔就放宽到 2 倍上限。"""
+    given = interval is not None
+    interval = interval or default_interval(duration)
+    n = int(duration / max(0.5, interval))
+    return max(6, min(MAX_FRAMES * 2 if given else MAX_FRAMES, n))
 
 
 def plan_times(duration: float, scenes: list, target: int) -> list:

@@ -70,7 +70,8 @@ def main(argv=None) -> int:
     ap.add_argument("--lang", help="语音语言代码，如 zh / en / ja；默认自动检测")
     ap.add_argument("--model", default="large-v3-turbo", help="whisper 模型：tiny/base/small/medium/large-v3/large-v3-turbo（默认）")
     ap.add_argument("--device", default="auto", choices=["auto", "cuda", "cpu"], help="识别设备，默认有显卡用显卡")
-    ap.add_argument("--frames", type=int, help="最多抽多少关键帧（默认按时长自动，上限 60）")
+    ap.add_argument("--interval", type=float, metavar="秒", help="大约每隔几秒抽一帧（默认按时长自动：1 分钟内 2 秒，3 分钟内 3 秒，10 分钟内 6 秒，30 分钟内 12 秒，更长 20 秒）")
+    ap.add_argument("--frames", type=int, help="最多抽多少关键帧（默认按时长自动，上限 150）")
     ap.add_argument("--scene", type=float, default=0.3, help="场景切换灵敏度 0~1，越小越敏感（默认 0.3）")
     ap.add_argument("--no-frames", action="store_true", help="不抽画面")
     ap.add_argument("--no-asr", action="store_true", help="没有字幕也不做语音识别")
@@ -159,7 +160,7 @@ def main(argv=None) -> int:
     if a.no_frames or not info["width"]:
         log("      跳过")
     else:
-        target = a.frames or fr.default_target(meta["duration"])
+        target = a.frames or fr.default_target(meta["duration"], a.interval)
         scenes = fr.scene_times(video, a.scene)
         times = fr.plan_times(meta["duration"], scenes, target)
         log(f"      场景切换 {len(scenes)} 处，抽 {len(times)} 帧")
