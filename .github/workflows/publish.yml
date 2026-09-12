@@ -1,5 +1,11 @@
 # 发布到 PyPI：在 GitHub 上发一个 Release 就会自动构建并上传。
 # 需要先在 PyPI 项目设置里添加 Trusted Publisher：owner vsh5dvsch7-png，repo yueying，workflow publish.yml，environment pypi
+#
+# Publishing a GitHub Release: (1) builds and uploads to PyPI via trusted publishing, then
+# (2) publishes server.json to the official MCP Registry with mcp-publisher (GitHub OIDC, no secrets).
+# Registry versions are immutable: a botched 0.2.0 becomes 0.2.1 (tests/test_version_sync.py keeps
+# server.json, pyproject.toml and __version__ in step). Manual fallback on the owner's machine:
+#   mcp-publisher login github && mcp-publisher publish
 name: publish
 
 on:
@@ -20,3 +26,22 @@ jobs:
           python-version: "3.12"
       - run: pip install build && python -m build
       - uses: pypa/gh-action-pypi-publish@release/v1
+
+  registry:
+    needs: pypi
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for PyPI to serve the new version
+        run: sleep 90
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --version
+      - name: Login to the MCP Registry (GitHub OIDC)
+        run: ./mcp-publisher login github-oidc
+      - name: Publish server.json
+        run: ./mcp-publisher publish

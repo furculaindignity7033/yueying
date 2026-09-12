@@ -1,0 +1,72 @@
+{
+ "title": "demo",
+ "source": "demo.mp4",
+ "duration": 24.0,
+ "width": 1280,
+ "height": 720,
+ "text_source": {
+  "kind": "asr",
+  "language": "zh",
+  "language_probability": 1.0,
+  "model": "large-v3-turbo",
+  "device": "cuda",
+  "compute_type": "float16",
+  "desc": "本地语音识别 faster-whisper large-v3-turbo（cuda），检测语言 zh（100%），1 段"
+ },
+ "report": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\report.md",
+ "transcript_srt": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\transcript.srt",
+ "transcript_txt": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\transcript.txt",
+ "grids": [
+  "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\grid_01.jpg"
+ ],
+ "frames": [
+  {
+   "index": 1,
+   "time": 1.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f001_00m02s.jpg"
+  },
+  {
+   "index": 2,
+   "time": 4.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f002_00m04s.jpg"
+  },
+  {
+   "index": 3,
+   "time": 6.36,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f003_00m06s.jpg"
+  },
+  {
+   "index": 4,
+   "time": 10.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f004_00m10s.jpg"
+  },
+  {
+   "index": 5,
+   "time": 12.32,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f005_00m12s.jpg"
+  },
+  {
+   "index": 6,
+   "time": 16.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f006_00m16s.jpg"
+  },
+  {
+   "index": 7,
+   "time": 18.279999999999998,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f007_00m18s.jpg"
+  },
+  {
+   "index": 8,
+   "time": 22.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_demo\\frames\\f008_00m22s.jpg"
+  }
+ ],
+ "segments": [
+  {
+   "start": 0.0,
+   "end": 24.0,
+   "text": "这是阅读,一个安静的桌面小说阅读器。整本书连续滚动,按段落记住进度。第二个画面是桌面模式,窗口变透明,只留文字浮在桌面上。第三个画面是伪装皮肤,一键变成代码编辑器。最后是伪装成表格的样子。"
+  }
+ ],
+ "chapters": []
+}

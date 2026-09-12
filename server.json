@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.vsh5dvsch7-png/yueying",
+  "title": "Yueying – Let AI watch videos",
+  "description": "Local videos or YouTube/Bilibili URLs -> timestamped transcript, keyframes, contact sheets. Offline.",
+  "repository": { "url": "https://github.com/vsh5dvsch7-png/yueying", "source": "github" },
+  "websiteUrl": "https://github.com/vsh5dvsch7-png/yueying",
+  "version": "0.2.0",
+  "packages": [{
+    "registryType": "pypi", "registryBaseUrl": "https://pypi.org", "identifier": "yueying", "version": "0.2.0",
+    "runtimeHint": "uvx", "transport": { "type": "stdio" },
+    "packageArguments": [{ "type": "positional", "value": "mcp", "description": "Run the MCP server" }],
+    "environmentVariables": [
+      { "name": "PYTHONUTF8", "description": "Set to 1 (UTF-8 I/O on Windows)", "default": "1", "isRequired": false },
+      { "name": "YUEYING_OUT_DIR", "description": "Folder for transcripts/keyframes (default ~/yueying_out)", "isRequired": false },
+      { "name": "YUEYING_MODEL", "description": "Default Whisper model: auto|tiny|base|small|medium|large-v3|large-v3-turbo", "default": "auto", "isRequired": false },
+      { "name": "YUEYING_DEVICE", "description": "auto | cuda | cpu", "default": "auto", "isRequired": false }
+    ]
+  }]
+}

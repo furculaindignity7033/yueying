@@ -3,6 +3,8 @@ import glob
 import os
 import sys
 
+from .models import MODEL_SIZES, model_repo, resolve_model  # noqa: F401  (re-exported; pure helpers live in models.py)
+
 
 def _add_cuda_dlls() -> None:
     """pip 装的 nvidia-cublas-cu12 / nvidia-cudnn-cu12 把 DLL 放在 site-packages/nvidia/*/bin，
@@ -70,9 +72,15 @@ def _chain(first, rest):
 
 
 def transcribe(wav: str, model_name: str, device: str, language, duration: float, log=print) -> tuple:
-    """返回 (segments, info)。segments = [{start, end, text}]。"""
+    """返回 (segments, info)。segments = [{start, end, text}]。
+
+    model_name may be "auto": large-v3-turbo on cuda, small on cpu (and small on cpu when the GPU trial fails).
+    info["model"] is the resolved name, info["requested_model"] what was asked for.
+    """
     _add_cuda_dlls()
+    requested = model_name
     dev, ct = pick_device(device)
+    model_name = resolve_model(requested, dev)
     log(f"  模型 {model_name}，设备 {dev} ({ct})；首次使用会下载模型，请耐心等待")
     model = gen = info = None
     if dev == "cuda":
@@ -86,6 +94,9 @@ def transcribe(wav: str, model_name: str, device: str, language, duration: float
             log(f"  GPU 不可用（{type(e).__name__}: {str(e)[:150]}），退回 CPU")
             dev, ct = "cpu", "int8"
             model = None
+            if requested == "auto":
+                model_name = resolve_model(requested, dev)
+                log(f"  模型 {model_name}，设备 {dev} ({ct})；首次使用会下载模型，请耐心等待")
     if model is None:
         model = _load(model_name, dev, ct, log)
         gen, info = _run(model, wav, language)
@@ -102,4 +113,37 @@ def transcribe(wav: str, model_name: str, device: str, language, duration: float
                 last_pct = pct
                 log(f"  识别进度 {pct}%")
     return segs, {"language": info.language, "language_probability": float(info.language_probability),
-                  "model": model_name, "device": dev, "compute_type": ct}
+                  "model": model_name, "device": dev, "compute_type": ct, "requested_model": requested}
+
+
+def _cache_dir(model_name: str) -> str:
+    """Local snapshot folder of an already-downloaded model ("" if unknown)."""
+    try:
+        from faster_whisper.utils import download_model
+        return download_model(model_name, local_files_only=True) or ""
+    except Exception:
+        return ""
+
+
+def prepare_model(model_name: str = "auto", device: str = "auto", log=print) -> dict:
+    """Download (if needed) and load the model once, e.g. for `yueying mcp --setup`.
+
+    Returns {model, device, compute_type, cache_dir, requested_model}; falls back to CPU (and to
+    `small` when "auto" was requested) if loading on the GPU fails.
+    """
+    _add_cuda_dlls()
+    dev, ct = pick_device(device)
+    name = resolve_model(model_name, dev)
+    log(f"  模型 {name}，设备 {dev} ({ct})；首次使用会下载模型，请耐心等待")
+    try:
+        model = _load(name, dev, ct, log)
+    except Exception as e:
+        if dev != "cuda":
+            raise
+        log(f"  GPU 不可用（{type(e).__name__}: {str(e)[:150]}），退回 CPU")
+        dev, ct = "cpu", "int8"
+        name = resolve_model(model_name, dev)
+        model = _load(name, dev, ct, log)
+    del model
+    return {"model": name, "device": dev, "compute_type": ct, "cache_dir": _cache_dir(name),
+            "requested_model": model_name}

@@ -1,0 +1,12 @@
+{
+  "name": "yueying",
+  "displayName": "Yueying – Let AI watch videos",
+  "version": "0.2.0",
+  "description": "Let AI watch videos: local files or YouTube/Bilibili URLs -> timestamped transcript + keyframes + contact sheets. Offline, no API key. MCP server (see .mcp.json) + agent skill.",
+  "author": { "name": "vsh5dvsch7-png", "url": "https://github.com/vsh5dvsch7-png" },
+  "homepage": "https://github.com/vsh5dvsch7-png/yueying#readme",
+  "repository": "https://github.com/vsh5dvsch7-png/yueying",
+  "license": "MIT",
+  "keywords": ["mcp", "mcp-server", "video", "video-analysis", "watch-video", "transcript", "keyframes", "whisper", "faster-whisper", "youtube", "bilibili", "offline", "agent-skills"],
+  "skills": "./src/yueying/"
+}

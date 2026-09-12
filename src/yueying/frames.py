@@ -18,10 +18,10 @@ def slug_time(t: float) -> str:
     return f"{h}h{m:02d}m{s:02d}s" if h else f"{m:02d}m{s:02d}s"
 
 
-def scene_times(video: str, threshold: float = 0.3) -> list:
+def scene_times(video: str, threshold: float = 0.3, timeout: float = 1200) -> list:
     """用 ffmpeg 的 scene 检测找画面明显变化的时间点。"""
     p = ffm.run(["-i", video, "-an", "-vf", f"select='gt(scene,{threshold})',showinfo", "-f", "null", "-"],
-                check=False)
+                check=False, timeout=timeout)
     return [float(x) for x in re.findall(r"pts_time:\s*([0-9.]+)", p.stderr)]
 
 
@@ -109,15 +109,45 @@ def changed_ratio(a: Image.Image, b: Image.Image, threshold: int = 20) -> float:
     return sum(1 for v in d if v > threshold) / len(d)
 
 
+def _grab(video: str, t: float, out_path: str, width: int, timeout: float) -> bool:
+    """One `ffmpeg -ss t -i video -frames:v 1` into out_path (JPEG, -q:v 3). False if ffmpeg failed."""
+    p = ffm.run(["-ss", f"{t:.3f}", "-i", video, "-frames:v", "1",
+                 "-vf", f"scale='min({width},iw)':-2", "-q:v", "3", out_path], check=False, timeout=timeout)
+    return p.returncode == 0 and os.path.exists(out_path)
+
+
+def extract_one(video: str, t: float, out_path: str, width: int = 1280, label: str | None = None,
+                timeout: float = 60) -> bool:
+    """Extract the single frame at `t` seconds into `out_path` (JPEG, at most `width` px wide).
+
+    With `label` (e.g. "@03:15") it is burned bottom-left like the keyframes and saved at quality 88;
+    without a label the raw ffmpeg JPEG is left as-is. The parent folder is created.
+    Returns False when ffmpeg could not produce a frame; raises ffm.MediaError on timeout.
+    """
+    d = os.path.dirname(out_path)
+    if d:
+        os.makedirs(d, exist_ok=True)
+    if not _grab(video, t, out_path, width, timeout):
+        return False
+    if label:
+        with Image.open(out_path) as im:
+            img = im.convert("RGB")
+        _burn(img, label).save(out_path, quality=88)
+    return True
+
+
 def extract(video: str, times: list, out_dir: str, width: int = 1280, dedupe: bool = True, log=print) -> list:
     """逐个时间点抽一帧存 jpg，返回 [{index, time, file}]。dedupe 时丢掉和前一帧几乎一样的画面。"""
     os.makedirs(out_dir, exist_ok=True)
     frames, dropped, last_thumb = [], 0, None
     tmp = os.path.join(out_dir, "_tmp.jpg")
     for n, t in enumerate(times, 1):
-        p = ffm.run(["-ss", f"{t:.3f}", "-i", video, "-frames:v", "1",
-                     "-vf", f"scale='min({width},iw)':-2", "-q:v", "3", tmp], check=False)
-        if p.returncode != 0 or not os.path.exists(tmp):
+        try:
+            ok = extract_one(video, t, tmp, width, label=None, timeout=60)
+        except ffm.MediaError:
+            log(f"      第 {n} 帧抽取超时，跳过")
+            ok = False
+        if not ok:
             continue
         with Image.open(tmp) as im:
             img = im.convert("RGB")

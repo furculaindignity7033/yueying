@@ -4,7 +4,11 @@ __pycache__/
 dist/
 build/
 yueying_out/
-test-*/
+# test media: only the two small reference outputs used by the tests are tracked
+test-*/*
+!test-media/out_zh/
+!test-media/out_demo/
 *.mp4
 *.wav
 posts.md
+*.mcpb

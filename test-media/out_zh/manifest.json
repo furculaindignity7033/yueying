@@ -1,0 +1,92 @@
+{
+ "title": "test_zh",
+ "source": "test_zh.mp4",
+ "duration": 24.0,
+ "width": 1280,
+ "height": 720,
+ "text_source": {
+  "kind": "asr",
+  "language": "zh",
+  "language_probability": 0.99853515625,
+  "model": "large-v3-turbo",
+  "device": "cuda",
+  "compute_type": "float16",
+  "desc": "本地语音识别 faster-whisper large-v3-turbo（cuda），检测语言 zh（100%），5 段"
+ },
+ "report": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\report.md",
+ "transcript_srt": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\transcript.srt",
+ "transcript_txt": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\transcript.txt",
+ "grids": [
+  "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\grid_01.jpg"
+ ],
+ "frames": [
+  {
+   "index": 1,
+   "time": 1.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f001_00m02s.jpg"
+  },
+  {
+   "index": 2,
+   "time": 4.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f002_00m04s.jpg"
+  },
+  {
+   "index": 3,
+   "time": 8.0,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f003_00m08s.jpg"
+  },
+  {
+   "index": 4,
+   "time": 10.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f004_00m10s.jpg"
+  },
+  {
+   "index": 5,
+   "time": 13.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f005_00m14s.jpg"
+  },
+  {
+   "index": 6,
+   "time": 16.0,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f006_00m16s.jpg"
+  },
+  {
+   "index": 7,
+   "time": 19.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f007_00m20s.jpg"
+  },
+  {
+   "index": 8,
+   "time": 22.5,
+   "file": "C:\\Users\\Administrator\\Desktop\\yueying\\test-media\\out_zh\\frames\\f008_00m22s.jpg"
+  }
+ ],
+ "segments": [
+  {
+   "start": 0.0,
+   "end": 3.4,
+   "text": "大家好,这是月影的中文测试视频。"
+  },
+  {
+   "start": 4.38,
+   "end": 9.1,
+   "text": "这节课我们学习如何把视频变成文字稿和关键针。"
+  },
+  {
+   "start": 10.04,
+   "end": 11.8,
+   "text": "第一步,安装工具。"
+  },
+  {
+   "start": 12.76,
+   "end": 16.18,
+   "text": "第二步,运行命令并传入视频路径。"
+  },
+  {
+   "start": 17.14,
+   "end": 21.18,
+   "text": "最后,读取报告,然后向课劳德提问。"
+  }
+ ],
+ "chapters": []
+}

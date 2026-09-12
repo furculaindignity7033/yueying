@@ -6,10 +6,34 @@ from . import ffm
 
 VIDEO_EXT = (".mp4", ".mkv", ".webm", ".mov", ".flv", ".m4a", ".mp3")
 SUB_EXT = (".vtt", ".srt", ".json", ".ass")
+SOCKET_TIMEOUT = 30
 
 
 def is_url(s: str) -> bool:
     return s.startswith("http://") or s.startswith("https://")
+
+
+class _YtDlpLogger:
+    """Routes yt-dlp's own output through our log(): warnings/errors always, debug only `[download]` lines.
+
+    With a logger set yt-dlp sends *every* screen message to debug() regardless of `quiet`, so drop the rest.
+    """
+
+    def __init__(self, log):
+        self._log = log
+
+    def debug(self, msg):
+        if isinstance(msg, str) and msg.startswith("[download]"):
+            self._log("  yt-dlp: " + msg)
+
+    def info(self, msg):
+        self.debug(msg)
+
+    def warning(self, msg):
+        self._log("  yt-dlp: " + str(msg))
+
+    def error(self, msg):
+        self._log("  yt-dlp: " + str(msg))
 
 
 def _pick_sub_langs(info: dict) -> tuple:
@@ -36,7 +60,8 @@ def list_entries(url: str, cookies_from_browser=None, log=print) -> list:
     """链接是分 P / 合集 / 播放列表时，列出里面每个视频的链接和标题；普通链接就返回它自己。"""
     import yt_dlp
 
-    opts = {"quiet": True, "no_warnings": True, "noplaylist": False, "extract_flat": "in_playlist"}
+    opts = {"quiet": True, "no_warnings": True, "noplaylist": False, "extract_flat": "in_playlist",
+            "logger": _YtDlpLogger(log), "socket_timeout": SOCKET_TIMEOUT}
     if cookies_from_browser:
         opts["cookiesfrombrowser"] = (cookies_from_browser,)
     with yt_dlp.YoutubeDL(opts) as y:
@@ -59,6 +84,7 @@ def download(url: str, out_dir: str, cookies_from_browser=None, log=print) -> di
         "quiet": True, "no_warnings": True, "noprogress": True,
         "ffmpeg_location": ffm.ffmpeg_exe(),  # 传完整路径：自带的 ffmpeg 文件名带版本号，传目录 yt-dlp 找不到
         "playlist_items": "1", "noplaylist": True,
+        "logger": _YtDlpLogger(log), "socket_timeout": SOCKET_TIMEOUT,
     }
     if cookies_from_browser:
         common["cookiesfrombrowser"] = (cookies_from_browser,)

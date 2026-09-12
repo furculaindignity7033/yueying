@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "yueying": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["yueying", "mcp"],
+      "env": { "PYTHONUTF8": "1" },
+      "timeout": 1800000
+    }
+  }
+}

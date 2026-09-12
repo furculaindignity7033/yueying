@@ -1,2 +1,2 @@
-"""阅影 (yueying)：把视频变成 AI 能读的文字稿和关键帧。"""
-__version__ = "0.1.3"
+"""阅影 (yueying): let AI watch videos — turn a video into a timestamped transcript and keyframes."""
+__version__ = "0.2.0"

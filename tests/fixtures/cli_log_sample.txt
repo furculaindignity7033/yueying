@@ -1,0 +1,18 @@
+[1/4] 本地文件 C:\Users\Administrator\Desktop\yueying\test-media\test_zh.mp4
+      时长 00:24，1280x720，有音轨，内嵌字幕 0 条
+[2/4] 文字
+      没有可用字幕，做本地语音识别
+  模型 large-v3-turbo，设备 cuda (float16)；首次使用会下载模型，请耐心等待
+  检测语言 zh（置信度 100%）
+  识别进度 14%
+  识别进度 37%
+  识别进度 49%
+  识别进度 67%
+  识别进度 88%
+[3/4] 画面
+      场景切换 2 处，抽 12 帧
+      去掉 6 张和前一帧几乎相同的画面，保留 6 张
+[4/4] 写报告
+完成，用时 8 秒
+报告：C:\Users\ADMINI~1\AppData\Local\Temp\yy_fx\fx\report.md
+{"title": "test_zh", "source": "C:/Users/Administrator/Desktop/yueying/test-media/test_zh.mp4", "duration": 24.0, "width": 1280, "height": 720, "text_source": {"kind": "asr", "language": "zh", "language_probability": 1.0, "model": "large-v3-turbo", "device": "cuda", "compute_type": "float16", "requested_model": "large-v3-turbo", "count": 5, "desc": "local speech recognition, faster-whisper large-v3-turbo on cuda, detected zh (100%), 5 segments"}, "report": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\report.md", "transcript_srt": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\transcript.srt", "transcript_txt": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\transcript.txt", "grids": ["C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\grid_01.jpg"], "frames": [{"index": 1, "time": 1.0, "file": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\frames\\f001_00m01s.jpg"}, {"index": 2, "time": 3.0, "file": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\frames\\f002_00m03s.jpg"}, {"index": 3, "time": 5.0, "file": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\frames\\f003_00m05s.jpg"}, {"index": 4, "time": 7.0, "file": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\frames\\f004_00m07s.jpg"}, {"index": 5, "time": 8.4, "file": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\frames\\f005_00m08s.jpg"}, {"index": 6, "time": 16.4, "file": "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\yy_fx\\fx\\frames\\f006_00m16s.jpg"}], "chapters": []}

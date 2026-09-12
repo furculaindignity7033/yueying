@@ -4,42 +4,56 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "yueying"
-version = "0.1.3"
-description = "阅影：把视频变成 AI 能读的文字稿和关键帧，让 Claude Code / Cursor 等编程助手看懂视频"
+version = "0.2.0"
+description = "Let AI watch videos: local files or YouTube/Bilibili URLs -> timestamped transcript + keyframes + contact sheets. Offline, no API key. MCP server + CLI + agent skill."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "vsh5dvsch7-png" }]
-keywords = ["video", "whisper", "claude-code", "agent-skill", "transcript", "keyframes", "bilibili", "youtube"]
+keywords = ["mcp", "mcp-server", "model-context-protocol", "video", "video-analysis", "watch-video", "transcript", "keyframes", "whisper", "faster-whisper", "youtube", "bilibili", "offline", "claude-desktop", "claude-code", "cursor", "cline", "windsurf", "agent-skills"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Environment :: Console",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Topic :: Multimedia :: Video",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
   "faster-whisper>=1.1",
   "yt-dlp>=2025.1.1",
   "imageio-ffmpeg>=0.5",
   "pillow>=10.1",
+  "mcp>=2.2,<3",
 ]
 
 [project.optional-dependencies]
 cuda = ["nvidia-cublas-cu12", "nvidia-cudnn-cu12"]
+dev = ["pytest>=8", "anyio>=4.9", "mcp[cli]>=2.2,<3", "build", "twine"]
 
 [project.urls]
 Homepage = "https://github.com/vsh5dvsch7-png/yueying"
 Repository = "https://github.com/vsh5dvsch7-png/yueying"
 Issues = "https://github.com/vsh5dvsch7-png/yueying/issues"
+Documentation = "https://github.com/vsh5dvsch7-png/yueying#readme"
+Changelog = "https://github.com/vsh5dvsch7-png/yueying/blob/main/CHANGELOG.md"
 
 [project.scripts]
 yueying = "yueying.cli:main"
+yueying-mcp = "yueying.mcp_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 yueying = ["skill/SKILL.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["asr: runs real speech recognition (needs model + minutes)", "net: needs network"]
