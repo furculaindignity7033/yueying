@@ -26,16 +26,31 @@ OPTION_KEYS = {"model", "device", "lang", "interval", "frames", "scene", "no_ded
 NEW_KEYS = {"schema", "yueying_version", "created_at", "ui_lang", "options", "out_dir", "uploader"}
 
 
+# tail of a placeholder path, e.g. <OUT>\frames\f001.jpg (JSON) or <OUT>/frames/f001.jpg (posix)
+_PLACEHOLDER_TAIL = re.compile(r"(<OUT>|<REPO>)((?:\\\\|\\|/)[^\"'\s]*)")
+
+
+def _slashes(text: str) -> str:
+    """Spell placeholder paths with "/" whatever platform wrote them."""
+    return _PLACEHOLDER_TAIL.sub(
+        lambda m: m.group(1) + m.group(2).replace("\\\\", "/").replace("\\", "/"), text)
+
+
 def _norm(text: str, out_dir: str) -> str:
-    """Replace the output folder / repo root (JSON-escaped, backslash and slash forms) with placeholders."""
+    """Replace the output folder / repo root (JSON-escaped, backslash and slash forms) with placeholders.
+
+    The baselines were captured on Windows, so the separators *inside* a placeholder path are
+    normalised to "/" as well — otherwise every comparison fails on Linux and macOS.
+    """
     for real, ph in ((os.path.abspath(out_dir), "<OUT>"), (str(REPO), "<REPO>")):
         for form in (real.replace("\\", "\\\\"), real, real.replace("\\", "/")):
             text = text.replace(form, ph)
-    return text
+    return _slashes(text)
 
 
 def _fixture(name: str, fn: str) -> str:
-    return (FIX / name / fn).read_text(encoding="utf-8")
+    """Baseline text, separators normalised (it was captured on Windows)."""
+    return _slashes((FIX / name / fn).read_text(encoding="utf-8"))
 
 
 def run_cli(args, env, timeout=600) -> subprocess.CompletedProcess:
@@ -87,7 +102,7 @@ def test_manifest_on_disk_has_schema_2_and_additive_keys(tmp_path, cli_env, TEST
     assert m["options"]["model"] == "large-v3-turbo" and m["options"]["device"] == "auto"
     assert m["options"]["scene"] == 0.3 and m["options"]["ui_lang"] == "zh"
     # every 0.1.x key is still there with the same value
-    old = json.loads(_fixture("test", "manifest.json"))
+    old = json.loads(_norm(_fixture("test", "manifest.json"), out))
     got = json.loads(_norm(json.dumps(m, ensure_ascii=False), out))
     assert {k: got[k] for k in old} == old
     assert set(m) == set(old) | NEW_KEYS
