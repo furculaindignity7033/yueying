@@ -5,9 +5,9 @@
   "description": "Local videos or YouTube/Bilibili URLs -> timestamped transcript, keyframes, contact sheets. Offline.",
   "repository": { "url": "https://github.com/vsh5dvsch7-png/yueying", "source": "github" },
   "websiteUrl": "https://github.com/vsh5dvsch7-png/yueying",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "packages": [{
-    "registryType": "pypi", "registryBaseUrl": "https://pypi.org", "identifier": "yueying", "version": "0.2.0",
+    "registryType": "pypi", "registryBaseUrl": "https://pypi.org", "identifier": "yueying", "version": "0.2.1",
     "runtimeHint": "uvx", "transport": { "type": "stdio" },
     "packageArguments": [{ "type": "positional", "value": "mcp", "description": "Run the MCP server" }],
     "environmentVariables": [

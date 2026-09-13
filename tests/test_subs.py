@@ -78,3 +78,63 @@ def test_identical_adjacent_cues_merge():
            "2\n00:00:02,000 --> 00:00:04,000\nsame text\n")
     segs = subs.parse_srt_vtt(srt)
     assert len(segs) == 1 and segs[0]["end"] == 4.0
+
+
+# --------------------------------------------------------------------- vtt 的结构性行不能当正文
+NUMERIC_VTT = """WEBVTT
+
+00:00:01.000 --> 00:00:03.000
+the build number is
+2024
+
+00:00:03.000 --> 00:00:05.000
+3
+
+00:00:05.000 --> 00:00:07.000
+liftoff
+"""
+
+IDENTIFIER_VTT = """WEBVTT
+
+NOTE this file was exported by some tool
+
+intro
+00:00:01.000 --> 00:00:03.000
+Hello
+
+verse-1
+00:00:03.000 --> 00:00:05.000
+World
+"""
+
+# 没有空行分隔的 srt（有些工具会这么导出）：末尾那个数字确实是下一条的序号
+DENSE_SRT = """1
+00:00:01,000 --> 00:00:02,000
+first
+2
+00:00:02,000 --> 00:00:03,000
+second
+"""
+
+
+def test_vtt_numeric_text_is_not_mistaken_for_an_srt_index():
+    segs = subs.parse_srt_vtt(NUMERIC_VTT)
+    assert [s["text"] for s in segs] == ["the build number is 2024", "3", "liftoff"]
+
+
+def test_vtt_cue_identifiers_and_notes_do_not_leak_into_text():
+    segs = subs.parse_srt_vtt(IDENTIFIER_VTT)
+    assert [s["text"] for s in segs] == ["Hello", "World"]
+
+
+def test_srt_without_blank_separators_still_drops_the_index():
+    segs = subs.parse_srt_vtt(DENSE_SRT)
+    assert [s["text"] for s in segs] == ["first", "second"]
+
+
+def test_arrow_inside_caption_text_does_not_break_timing():
+    vtt = ("WEBVTT\n\n00:00:01.000 --> 00:00:03.000\nuse a --> b arrow here\n\n"
+           "00:00:03.000 --> 00:00:05.000\nnext line\n")
+    segs = subs.parse_srt_vtt(vtt)
+    assert [s["text"] for s in segs] == ["use a --> b arrow here", "next line"]
+    assert [s["start"] for s in segs] == [1.0, 3.0]

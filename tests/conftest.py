@@ -2,7 +2,7 @@
 
 Fixture names follow the 0.2.0 spec: TEST_MP4, TEST_ZH (24 s TTS clips), REF_ZH / REF_DEMO (reference
 manifest.json files produced by a real ASR run), an autouse temporary YUEYING_OUT_DIR, and
-anyio_backend="asyncio". Media files are git-ignored: tests that need them are skipped when absent.
+anyio_backend="asyncio". test.mp4 and test_zh_small.mp4 are committed; the larger clips are git-ignored, so tests that need those are skipped when absent.
 """
 import os
 import sys

@@ -326,7 +326,7 @@ The server process never loads yt-dlp, Whisper or CUDA itself; all heavy work ru
 
 ## Roadmap
 
-- **0.2.1** — `.mcpb` one-click bundle for Claude Desktop, Smithery listing.
+- **next** — `.mcpb` one-click bundle for Claude Desktop, Smithery listing.
 - **0.3** — `forget_video` / prune tools, English as the CLI default report language, `--all` (playlists) over MCP.
 
 ## Credits

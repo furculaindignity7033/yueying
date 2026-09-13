@@ -3,7 +3,7 @@
 All notable changes to yueying. Versions follow [Semantic Versioning](https://semver.org/); the
 format follows [Keep a Changelog](https://keepachangelog.com/).
 
-## Unreleased
+## 0.2.1 — 2026-09-13
 
 ### Fixed
 
@@ -12,7 +12,14 @@ format follows [Keep a Changelog](https://keepachangelog.com/).
   the parser split cues on blank lines, but YouTube puts a whitespace-only line *inside*
   a cue and repeats the previous line in every cue. Cues are now split on the timestamp
   lines, and only the newly spoken words (the ones carrying inline `<00:00:04.480><c>`
-  timings) are kept. This affects every YouTube video without manual subtitles.
+  timings) are kept. This affects every YouTube video without manual subtitles; all other
+  srt/vtt sources go through the same parser, where a cue that only repeats the previous line
+  is now folded into it. Videos already processed with 0.2.0 stay cached as they are — call
+  `watch_video(..., refresh=true)`, or delete the video's folder under `~/yueying_out`, to
+  re-parse an affected video.
+- A cue is now terminated by a blank line, so a WebVTT cue identifier, a `NOTE` block or an
+  SRT index line can no longer leak into the previous cue's text, and a cue whose text is a
+  bare number (`2024`, a `3 / 2 / 1` countdown) is no longer dropped.
 
 ### Added
 

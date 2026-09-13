@@ -1,7 +1,7 @@
 {
   "name": "yueying",
   "displayName": "Yueying – Let AI watch videos",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Let AI watch videos: local files or YouTube/Bilibili URLs -> timestamped transcript + keyframes + contact sheets. Offline, no API key. MCP server (see .mcp.json) + agent skill.",
   "author": { "name": "vsh5dvsch7-png", "url": "https://github.com/vsh5dvsch7-png" },
   "homepage": "https://github.com/vsh5dvsch7-png/yueying#readme",

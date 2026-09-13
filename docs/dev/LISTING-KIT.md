@@ -54,7 +54,7 @@ https://mcpmarket.com/submit → 粘贴仓库地址。
 无需操作，从官方 Registry 自动抓取（提交入口暂停中，几周后再看）。
 
 ## 10. 发帖（英文优先，一周后再发中文）
-- dev.to / Show HN / r/ClaudeAI / r/cursor：主题「Let AI watch videos offline: an MCP server with scene-change contact sheets」，配 docs/demo-grid.jpg，一句基准：6 分钟 B站视频在 RTX 5060 笔记本上约 100 秒出结果。预先回应三个常见质疑：图片 token 成本（九宫格每张约 1–2K token）、隐私边界（画面只发给你自己用的模型）、关键帧漏动作（get_frame_at 可看任意一秒）。
+- dev.to / Show HN / r/ClaudeAI / r/cursor：主题「Let AI watch videos offline: an MCP server with scene-change contact sheets」，配 docs/demo-grid.jpg，一句基准：6 分钟 B站视频在 RTX 5060 笔记本上约 90 秒出结果。预先回应三个常见质疑：图片 token 成本（九宫格每张约 1–2K token）、隐私边界（画面只发给你自己用的模型）、关键帧漏动作（get_frame_at 可看任意一秒）。
 - 中文：小众软件 t/91454 主楼补「v0.2.0 MCP 版」一节；V2EX 分享创造；即刻。
 
 ## 0.2.1 再做

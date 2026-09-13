@@ -46,22 +46,24 @@ def _new_lines(lines: list, prev_text: str) -> list:
 
 
 def parse_srt_vtt(content: str) -> list:
-    """按时间轴行切分，不靠空行分隔 cue。
+    """按时间轴行切分：一条字幕从它的时间轴行开始，到第一个真正的空行为止。
 
-    YouTube 的自动字幕在 cue 内部放了只含一个空格的行，按空行分隔会把一条字幕拦腰截断。
+    不能单纯按空行分块：YouTube 的自动字幕在 cue 内部放了只含一个空格的行（不是空行），
+    那样会把字幕拦腰截断。也不能一路读到下一条时间轴行：中间的空行之后可能是下一条的
+    序号（srt）、cue 标识或 NOTE 注释（vtt），会被当成正文。
     """
     lines = [l.strip("﻿") for l in content.splitlines()]
-    marks = [i for i, l in enumerate(lines) if "-->" in l]
+    marks = [i for i, l in enumerate(lines) if "-->" in l and _TIME.search(l.split("-->", 1)[0])]
     segs = []
     for n, i in enumerate(marks):
         a, b = lines[i].split("-->", 1)
         body = lines[i + 1:marks[n + 1] if n + 1 < len(marks) else len(lines)]
+        if "" in body:
+            body = body[:body.index("")]                   # 空行结束一条字幕
+        elif n + 1 < len(marks) and body and body[-1].strip().isdigit():
+            body.pop()                                     # 没有空行分隔的 srt：末尾是下一条的序号
         while body and not body[-1].strip():
             body.pop()
-        if n + 1 < len(marks) and body and body[-1].strip().isdigit():
-            body.pop()                                    # 下一条 srt 的序号行
-            while body and not body[-1].strip():
-                body.pop()
         text = _clean(" ".join(_new_lines(body, segs[-1]["text"] if segs else "")))
         if text:
             segs.append({"start": _ts(a), "end": _ts(b), "text": text})
