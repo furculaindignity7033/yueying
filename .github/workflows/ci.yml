@@ -35,3 +35,18 @@ jobs:
         run: yueying-mcp --check
       - name: Tests (no ASR, no network)
         run: pytest -q -m "not asr and not net"
+
+  # Glama and other registries start the image and introspect it; prove that works.
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build image
+        run: docker build -t yueying:ci .
+      - name: Install client
+        run: pip install "mcp>=2.2,<3"
+      - name: Introspect over stdio
+        run: python .github/scripts/docker_introspect.py

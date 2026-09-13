@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+dist
+build
+docs
+tests
+test-media
+*.egg-info
+__pycache__
+yueying_out
+*.mp4
+*.wav

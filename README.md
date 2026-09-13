@@ -147,6 +147,18 @@ pip install "yueying[cuda]"
 
 Device and model are chosen automatically (`model=auto`: large-v3-turbo on CUDA, small on CPU); if the GPU trial fails, recognition falls back to CPU by itself.
 
+### Docker
+
+```bash
+docker build -t yueying .
+docker run --rm -i -v yueying-data:/data -v "$PWD/videos:/videos:ro" yueying
+```
+
+The image is CPU-only (containers get no GPU by default), so it defaults to the `small` model.
+Mount your videos read-only and give the tools container paths (`/videos/lesson.mp4`); results and
+the downloaded Whisper weights live in the `/data` volume. In a client config the `command` is
+`docker` and `args` are `["run", "--rm", "-i", "-v", "yueying-data:/data", "-v", "/your/videos:/videos:ro", "yueying"]`.
+
 ## Tools
 
 | Tool | When the agent uses it | What it returns | Limits |

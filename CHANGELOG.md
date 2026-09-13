@@ -3,6 +3,14 @@
 All notable changes to yueying. Versions follow [Semantic Versioning](https://semver.org/); the
 format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## Unreleased
+
+### Added
+
+- `Dockerfile` (CPU-only, ffmpeg from the distro) so registries that start the server and introspect it
+  — Glama, Docker's MCP catalog — can run it, plus a CI job that builds the image and does an
+  `initialize` + `tools/list` round trip over `docker run -i`.
+
 ## 0.2.0 — 2026-09-09
 
 First release with an MCP server. Install with `uvx yueying mcp --setup` or `pip install yueying`.
