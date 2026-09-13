@@ -7,6 +7,9 @@ format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
+- CI job that really transcribes on Linux and macOS (`tiny` model on CPU, CLI and MCP paths),
+  so the pipeline is no longer only proven on the maintainer's Windows box; the two short test
+  clips it uses are now part of the checkout.
 - `Dockerfile` (CPU-only, ffmpeg from the distro) so registries that start the server and introspect it
   — Glama, Docker's MCP catalog — can run it, plus a CI job that builds the image and does an
   `initialize` + `tools/list` round trip over `docker run -i`.

@@ -12,3 +12,6 @@ test-*/*
 *.wav
 posts.md
 *.mcpb
+# two short clips the CI end-to-end job really transcribes
+!test-media/test.mp4
+!test-media/test_zh_small.mp4
