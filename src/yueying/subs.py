@@ -23,24 +23,50 @@ def _clean(text: str) -> str:
     return " ".join(text.split())
 
 
+# YouTube 自动字幕里新说的词带内嵌时间标签，如 welcome<00:00:02.960><c> to</c>
+_INLINE_TIME = re.compile(r"<\d+:\d+:\d+[.,]\d+>")
+
+
+def _new_lines(lines: list, prev_text: str) -> list:
+    """滚动式字幕的每条 cue 都把上一行原样带下来，只留真正新说的那几行。
+
+    YouTube 的自动字幕长这样（两行，第一行是上一句、第二行才是新词）：
+
+        00:00:04.319 --> 00:00:06.550
+        welcome to this get and gifts video
+        the<00:00:04.480><c> series</c><00:00:04.799><c> where</c>
+
+    带内嵌时间标签的行就是新词；没有标签的滚动字幕则靠“和上一条一样就丢掉”兜底。
+    普通 srt/vtt 的多行字幕不会命中这两条规则，原样保留。
+    """
+    tagged = [l for l in lines if _INLINE_TIME.search(l)]
+    if tagged:
+        return tagged
+    return [l for l in lines if _clean(l) and _clean(l) != prev_text]
+
+
 def parse_srt_vtt(content: str) -> list:
+    """按时间轴行切分，不靠空行分隔 cue。
+
+    YouTube 的自动字幕在 cue 内部放了只含一个空格的行，按空行分隔会把一条字幕拦腰截断。
+    """
+    lines = [l.strip("﻿") for l in content.splitlines()]
+    marks = [i for i, l in enumerate(lines) if "-->" in l]
     segs = []
-    block = []
-    for raw in content.splitlines() + [""]:
-        line = raw.strip("﻿").rstrip()
-        if line.strip():
-            block.append(line)
-            continue
-        if not block:
-            continue
-        # 找时间轴行
-        idx = next((i for i, l in enumerate(block) if "-->" in l), None)
-        if idx is not None:
-            a, b = block[idx].split("-->", 1)
-            text = _clean(" ".join(block[idx + 1:]))
-            if text:
-                segs.append({"start": _ts(a), "end": _ts(b), "text": text})
-        block = []
+    for n, i in enumerate(marks):
+        a, b = lines[i].split("-->", 1)
+        body = lines[i + 1:marks[n + 1] if n + 1 < len(marks) else len(lines)]
+        while body and not body[-1].strip():
+            body.pop()
+        if n + 1 < len(marks) and body and body[-1].strip().isdigit():
+            body.pop()                                    # 下一条 srt 的序号行
+            while body and not body[-1].strip():
+                body.pop()
+        text = _clean(" ".join(_new_lines(body, segs[-1]["text"] if segs else "")))
+        if text:
+            segs.append({"start": _ts(a), "end": _ts(b), "text": text})
+        elif segs and body:
+            segs[-1]["end"] = max(segs[-1]["end"], _ts(b))   # 整条都是带下来的旧内容
     return _dedupe(segs)
 
 

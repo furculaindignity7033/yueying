@@ -5,6 +5,15 @@ format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Fixed
+
+- YouTube auto-captions came out duplicated (`welcome to this talk the series where we
+  explain the series where we explain …`) and the first cue of a file could be dropped:
+  the parser split cues on blank lines, but YouTube puts a whitespace-only line *inside*
+  a cue and repeats the previous line in every cue. Cues are now split on the timestamp
+  lines, and only the newly spoken words (the ones carrying inline `<00:00:04.480><c>`
+  timings) are kept. This affects every YouTube video without manual subtitles.
+
 ### Added
 
 - CI job that really transcribes on Linux and macOS (`tiny` model on CPU, CLI and MCP paths),
@@ -14,7 +23,7 @@ format follows [Keep a Changelog](https://keepachangelog.com/).
   — Glama, Docker's MCP catalog — can run it, plus a CI job that builds the image and does an
   `initialize` + `tools/list` round trip over `docker run -i`.
 
-## 0.2.0 — 2026-09-09
+## 0.2.0 — 2026-09-12
 
 First release with an MCP server. Install with `uvx yueying mcp --setup` or `pip install yueying`.
 
